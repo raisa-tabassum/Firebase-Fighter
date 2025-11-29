@@ -43,7 +43,26 @@ const Signin = () => {
       })
       .catch((e) => {
         console.log(e);
-        toast.error(e.message);
+        console.log(e.code);
+        // Handle all common Firebase Auth errors
+        if (e.code === "auth/email-already-in-use") {
+          toast.error("User already exist in database.");
+        } else if (e.code === "auth/invalid-email") {
+          toast.error("Invalid email address.");
+        } else if (e.code === "auth/weak-password") {
+          toast.error("Password is too weak. Please choose a stronger one.");
+        } else if (e.code === "auth/operation-not-allowed") {
+          toast.error("Email/password accounts are not enabled in Firebase.");
+        } else if (e.code === "auth/too-many-requests") {
+          toast.error("Too many attempts. Please try again later.");
+        } else if (e.code === "auth/missing-password") {
+          toast.error("Password field cannot be empty.");
+        } else if (e.code === "auth/missing-email") {
+          toast.error("Email field cannot be empty.");
+        } else {
+          // For any unknown/unexpected errors
+          toast.error(e.message || "An unexpected error occurred");
+        }
       });
   };
   const handleSignOut = () => {
